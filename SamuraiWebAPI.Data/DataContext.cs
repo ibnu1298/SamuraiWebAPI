@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SamuraiWebAPI.Models;
 
 namespace SamuraiWebAPI.Data
@@ -20,6 +15,7 @@ namespace SamuraiWebAPI.Data
         public DbSet<Sword> Swords { get; set; }
         public DbSet<Demon> Demons { get; set; }
         public DbSet<TypeSword> TypeSwords { get; set; }
+        public DbSet<ElementSword> ElementSwords { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,7 +23,16 @@ namespace SamuraiWebAPI.Data
                 .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name },
                 Microsoft.Extensions.Logging.LogLevel.Information).EnableSensitiveDataLogging();
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Element>().HasMany(s => s.Swords)
+                .WithMany(b => b.Elements)
+                .UsingEntity<ElementSword>(bs => bs.HasOne<Sword>().WithMany(),
+                bs => bs.HasOne<Element>().WithMany());
+        }
 
     }
 
 }
+
+
