@@ -108,7 +108,7 @@ namespace SamuraiWebAPI.Controllers
             return samuraiBattleDtos;
         }
 
-        [HttpGet("STE")]
+        [HttpGet("SamuraiSTE")]
         public async Task<IEnumerable<SamuraiSwordElementDTO>> GetSamuraiPack()
         {
             var results = await _samuraiDAL.GetSamuraiWithSE();

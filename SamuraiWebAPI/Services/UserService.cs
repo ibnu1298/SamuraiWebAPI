@@ -2,6 +2,8 @@
 using Microsoft.IdentityModel.Tokens;
 using SampleWebAPI.Helpers;
 using SampleWebAPI.Models;
+using SamuraiWebAPI.Data;
+using SamuraiWebAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,6 +15,8 @@ namespace SampleWebAPI.Services
         AuthenticateResponse Authenticate(AuthenticateRequest model);
         IEnumerable<User> GetAll();
         User GetById(int id);
+        Task<User> Registration(User user);
+        AuthenticateResponse Login(AuthenticateRequest model);
     }
     public class UserService : IUserService
     {
@@ -22,10 +26,12 @@ namespace SampleWebAPI.Services
         };
 
         private readonly AppSettings _appSettings;
+        private readonly DataContext _context;
 
-        public UserService(IOptions<AppSettings> appSettings)
+        public UserService(IOptions<AppSettings> appSettings, DataContext context)
         {
             _appSettings = appSettings.Value;
+            _context = context;
         }
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
@@ -43,12 +49,12 @@ namespace SampleWebAPI.Services
 
         public IEnumerable<User> GetAll()
         {
-            return _users;
+            return _context.Users;
         }
 
         public User GetById(int id)
         {
-            return _users.FirstOrDefault(x => x.Id == id);
+            return _context.Users.FirstOrDefault(x => x.Id == id);
         }
 
         private string generateJwtToken(User user)
@@ -59,11 +65,40 @@ namespace SampleWebAPI.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
-                Expires = DateTime.UtcNow.AddDays(7),//hanya berlaku 7 hari
+                Expires = DateTime.UtcNow.AddDays(1),//hanya berlaku 1 Hari
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<User> Registration(User obj)
+        {
+            try
+            {
+                var userName = _context.Users.FirstOrDefault(u => u.Username == obj.Username);
+                if (userName != null) throw new ("Username sudah digunakan\nSilakan Gunakan Username yang lain :)");
+                _context.Users.Add(obj);
+                await _context.SaveChangesAsync();
+                return obj;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception($"{ex.Message}");
+            }
+        }
+
+        public AuthenticateResponse Login(AuthenticateRequest model)
+        {
+            var user = _context.Users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
+            // return null if user not found
+            if (user == null) return null;
+
+            // authentication successful so generate jwt token
+            var token = generateJwtToken(user);
+
+            return new AuthenticateResponse(user, token);
         }
     }
 }

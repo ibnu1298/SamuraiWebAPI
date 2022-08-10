@@ -31,8 +31,8 @@ namespace SamuraiWebAPI.Data.DAL
         {
             try
             {
-                var element = await _context.ElementSwords.FirstOrDefaultAsync(s => s.SwordsId == id);
-                if (element == null) throw new Exception($"Tidak ada Element pada Sword dengan Id = {id} tidak ditemukan");
+                var element = await _context.ElementSwords.Where(s => s.SwordsId == id).ToListAsync();
+                if (element == null) throw new ($"Tidak ada Element pada Sword dengan Id = {id} tidak ditemukan");
                 _context.ElementSwords.RemoveRange(element);
                 await _context.SaveChangesAsync();
             }
@@ -51,7 +51,7 @@ namespace SamuraiWebAPI.Data.DAL
         public async Task<Sword> GetById(int id)
         {
             var result = await _context.Swords.FirstOrDefaultAsync(s => s.Id == id);
-            if (result == null) throw new Exception($"Tidak ada data dengan Id = {id}");
+            if (result == null) throw new ($"Tidak ada data dengan Id = {id}");
             return result;
         }
 
@@ -99,7 +99,7 @@ namespace SamuraiWebAPI.Data.DAL
             try
             {
                 var updateSword = await _context.Swords.FirstOrDefaultAsync(s => s.Id == obj.Id);
-                if (updateSword == null) throw new Exception($"Data dengan ID = {obj.Id} Tidak ditemukan");
+                if (updateSword == null) throw new ($"Data dengan ID = {obj.Id} Tidak ditemukan");
                 updateSword.Name = obj.Name;
                 await _context.SaveChangesAsync();
                 return obj;

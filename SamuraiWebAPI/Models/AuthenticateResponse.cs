@@ -1,4 +1,6 @@
-﻿namespace SampleWebAPI.Models
+﻿using SamuraiWebAPI.Models;
+
+namespace SampleWebAPI.Models
 {
     public class AuthenticateResponse
     {

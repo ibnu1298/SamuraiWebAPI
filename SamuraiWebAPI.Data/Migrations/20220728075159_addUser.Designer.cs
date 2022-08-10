@@ -11,8 +11,8 @@ using SamuraiWebAPI.Data;
 namespace SamuraiWebAPI.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220722044601_elementsworddrop")]
-    partial class elementsworddrop
+    [Migration("20220728075159_addUser")]
+    partial class addUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,21 +68,6 @@ namespace SamuraiWebAPI.Data.Migrations
                     b.ToTable("DemonElement");
                 });
 
-            modelBuilder.Entity("ElementSword", b =>
-                {
-                    b.Property<int>("ElementsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SwordsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ElementsId", "SwordsId");
-
-                    b.HasIndex("SwordsId");
-
-                    b.ToTable("ElementSword");
-                });
-
             modelBuilder.Entity("SamuraiWebAPI.Models.Battle", b =>
                 {
                     b.Property<int>("Id")
@@ -108,6 +93,9 @@ namespace SamuraiWebAPI.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -132,6 +120,21 @@ namespace SamuraiWebAPI.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Elements");
+                });
+
+            modelBuilder.Entity("SamuraiWebAPI.Models.ElementSword", b =>
+                {
+                    b.Property<int>("ElementsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SwordsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ElementsId", "SwordsId");
+
+                    b.HasIndex("SwordsId");
+
+                    b.ToTable("ElementSwords");
                 });
 
             modelBuilder.Entity("SamuraiWebAPI.Models.Samurai", b =>
@@ -199,6 +202,35 @@ namespace SamuraiWebAPI.Data.Migrations
                     b.ToTable("TypeSwords");
                 });
 
+            modelBuilder.Entity("SamuraiWebAPI.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("BattleDemon", b =>
                 {
                     b.HasOne("SamuraiWebAPI.Models.Battle", null)
@@ -244,7 +276,7 @@ namespace SamuraiWebAPI.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ElementSword", b =>
+            modelBuilder.Entity("SamuraiWebAPI.Models.ElementSword", b =>
                 {
                     b.HasOne("SamuraiWebAPI.Models.Element", null)
                         .WithMany()

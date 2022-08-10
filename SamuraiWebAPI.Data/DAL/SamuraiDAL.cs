@@ -69,13 +69,15 @@ namespace SamuraiWebAPI.Data.DAL
 
         public async Task<IEnumerable<Samurai>> GetSamuraiWithSE()
         {
-            var results = await _context.Samurais.Include(s => s.Swords).ThenInclude(e => e.Elements).ToListAsync();
-            return results;
-        }
-
-        public async Task<IEnumerable<Samurai>> GetSamuraiWithST()
-        {
-            var results = await _context.Samurais.Include(s => s.Swords).ThenInclude(t => t.TypeSword).ToListAsync();
+            var results = await _context.Samurais.Include(s => s.Swords).ToListAsync();
+            foreach (var sword in results)
+            {
+                foreach (var item in sword.Swords)
+                {
+                    await _context.Swords.Include(s => s.Elements).ToListAsync();
+                    await _context.Swords.Include(s => s.TypeSword).ToListAsync();
+                }
+            }
             return results;
         }
 

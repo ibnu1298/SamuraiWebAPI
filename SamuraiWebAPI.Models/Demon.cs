@@ -10,6 +10,7 @@ namespace SamuraiWebAPI.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int Level { get; set; }
         public List<Battle> Battles { get; set; } = new List<Battle>();
         public List<Element> Elements { get; set; } = new List<Element>();
     }

@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Demon\" />
     <Folder Include="Dtos\Battle\" />
   </ItemGroup>
 

@@ -37,12 +37,13 @@ namespace SamuraiWebAPI.Controllers
             var swordDTO = _mapper.Map<IEnumerable<SwordDTO>>(results);
             return swordDTO;
         }
-        [HttpGet("Pagnation/{page}")]//Read
+        [HttpGet("Pagination/{page}")]//Read
         public async Task<IEnumerable<ReadSwordTypeDTO>> GetPage(int page)
         {
             var results = await _swordDAL.PaginationSword();
             var swordType = _mapper.Map<IEnumerable<ReadSwordTypeDTO>>(results);
-            var finalSwords = swordType.Skip((page - 1) * 10).Take(10).ToList();
+            var record = 10;
+            var finalSwords = swordType.Skip((page - 1) * record).Take(record).ToList();
             return finalSwords;
         }
         //[HttpGet("Pagnation2/{page}")]
@@ -118,24 +119,15 @@ namespace SamuraiWebAPI.Controllers
 
         }
         [HttpPut]//Update
-        public async Task<ActionResult> Put(SwordDTO swordDTO)
+        public async Task<ActionResult<List<SwordDTO>>> updateSword(SwordDTO swordDTO)
         {
-            try
-            {
-                var updateSword = new Sword
-                {
-                    Id = swordDTO.Id,
-                    Name = swordDTO.Name,
-                    Weight = swordDTO.Weight
-                };
-                var result = await _swordDAL.Update(updateSword);
-                return Ok(swordDTO);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var sword = await _context.Swords.FirstOrDefaultAsync(s => s.Id == swordDTO.Id);
+            if (sword == null)
+                return BadRequest($"Sword dengan Id = {swordDTO.Id} Tidak ditemukan");
+            sword.Name = swordDTO.Name;
+            sword.Weight = swordDTO.Weight;
+            await _context.SaveChangesAsync();
+            return Ok(swordDTO);
         }
 
         [HttpDelete("{id}")] //Delete
@@ -204,7 +196,7 @@ namespace SamuraiWebAPI.Controllers
             try
             {
                 await _swordDAL.DeleteElement(Id);
-                return Ok($"Berhasil Menghaspus Element pada Id = {Id}");
+                return Ok($"Berhasil Menghapus Element pada Sword dengan Id = {Id}");
             }
             catch (Exception ex)
             {

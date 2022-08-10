@@ -2,6 +2,7 @@
 using SamuraiWebAPI.Dtos;
 using SamuraiWebAPI.Dtos.Samurai;
 using SamuraiWebAPI.Dtos.TypeSword;
+using SamuraiWebAPI.Dtos.User;
 using SamuraiWebAPI.Models;
 
 namespace SamuraiWebAPI.Profiles
@@ -29,6 +30,7 @@ namespace SamuraiWebAPI.Profiles
             CreateMap<Samurai, ReadSamuraiSword>();
 
             CreateMap<NameTypeSwordDTO, TypeSword>();
+            CreateMap<CreateUserDTO, User>();
             
 
         }

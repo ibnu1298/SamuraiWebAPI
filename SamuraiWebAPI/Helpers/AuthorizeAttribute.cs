@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SampleWebAPI.Models;
+using SamuraiWebAPI.Models;
 
 namespace SampleWebAPI.Helpers
 {

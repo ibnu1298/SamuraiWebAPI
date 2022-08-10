@@ -12,7 +12,6 @@ namespace SamuraiWebAPI.Data.DAL
         Task<IEnumerable<Samurai>> GetSamuraiWithSwords();
         Task<IEnumerable<Samurai>> GetSamuraiWithBattles();
         Task<IEnumerable<Samurai>> GetSamuraiWithSE();
-        Task<IEnumerable<Samurai>> GetSamuraiWithST();
         Task<Samurai> AddSamuraiSword(Samurai samurai);
     }
 }

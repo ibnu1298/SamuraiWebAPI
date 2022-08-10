@@ -15,6 +15,7 @@ namespace SamuraiWebAPI.Data
         public DbSet<Sword> Swords { get; set; }
         public DbSet<Demon> Demons { get; set; }
         public DbSet<TypeSword> TypeSwords { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<ElementSword> ElementSwords { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

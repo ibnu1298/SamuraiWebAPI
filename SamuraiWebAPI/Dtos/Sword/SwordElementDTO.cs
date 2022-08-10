@@ -1,6 +1,4 @@
-﻿using SamuraiWebAPI.Dtos.TypeSword;
-
-namespace SamuraiWebAPI.Dtos
+﻿namespace SamuraiWebAPI.Dtos
 {
     public class SwordElementDTO
     {
